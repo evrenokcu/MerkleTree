@@ -31,25 +31,30 @@ public class Node
     internal static Node CreateRoot(string value, Node parentOf)
     {
         var node = new Node(value, Node.NullNode, parentOf, NullNode, parentOf.Level + 1);
+        parentOf.Parent = node;
         return node;
     }
 
     internal bool HasRoom() => Left == NullNode || Right == NullNode;
 
-    internal void Accept(string value)
+    internal LeafNode Accept(string value)
     {
+        if (!HasRoom()) throw new InvalidOperationException($"Node is already full, can not accept a leaf.");
+
+        LeafNode newNode = new LeafNode(value, this);
+
         if (Left == NullNode)
         {
             //todo: use static factory on node when creating new leaf node
-            Left = new LeafNode(value, this);
-
-            return;
+            Left = newNode;
         }
-
-        if (Right == NullNode)
+        else if (Right == NullNode)
         {
             Right = new LeafNode(value, this);
         }
+        else throw new InvalidOperationException();
+
+        return newNode;
     }
 
     internal bool CanHaveSubParent() => AllowedSubParents > 0;

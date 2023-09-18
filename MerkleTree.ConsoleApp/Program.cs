@@ -1,4 +1,6 @@
-﻿namespace MerkleTree.ConsoleApp;
+﻿using MerkleTree.Visitors.Implementations;
+
+namespace MerkleTree.ConsoleApp;
 
 internal class Program
 {
@@ -14,6 +16,9 @@ internal class Program
         var rootNode = tree.RootNode;
         var currentParentNode = tree.CurrentParentNode;
 
+        Console.WriteLine($"Leaf count:{leafCount}");
+
+        VisitToParent(tree.GetLeaf(1));
         VisitTree(rootNode);
 
         Console.ReadLine();
@@ -22,6 +27,11 @@ internal class Program
     private static void VisitTree(Node rootNode)
     {
         var visitor = new LevelOrderVisitor(rootNode, (node) => Console.Write($" {node.Value} "));
+        visitor.Visit();
+    }
+    private static void VisitToParent(LeafNode leaf)
+    {
+        var visitor = new LeafToParentVisitor(leaf, (node) => Console.Write($" {node.Value} "));
         visitor.Visit();
     }
 
@@ -46,13 +56,8 @@ internal class Program
             if (node != Node.NullNode)
             {
                 Console.WriteLine($"{prefix} Level:{node.Level}, Value:{node.Value}");
-
             }
-
         }
-
-            
-
         if (node == Node.NullNode) return;
         Console.WriteLine($"{prefix} Level:{node.Level}, Value:{node.Value}");
         WriteNode(node.Left,"left:");

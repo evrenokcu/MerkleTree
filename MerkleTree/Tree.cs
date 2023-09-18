@@ -7,6 +7,13 @@ public class Tree
     public Node CurrentParentNode { get; private set; } = Node.NullNode;
     private readonly NodeStack _parentNodesNodeStack = new();
     public int NodeNumber;
+    private readonly IList<LeafNode> _leaves  = new List<LeafNode>();
+
+    public LeafNode GetLeaf(int leafNumber)
+    {
+        if(leafNumber==0||leafNumber>LeafCount) throw new ArgumentOutOfRangeException(nameof(leafNumber));
+        return _leaves[leafNumber-1];
+    }
 
 
     public void AddNode(string value)
@@ -18,25 +25,27 @@ public class Tree
             CurrentParentNode = newRoot;
         }
 
-        AddNode(value, _parentNodesNodeStack,CurrentParentNode);
+        AddNode(value, _parentNodesNodeStack, CurrentParentNode);
         LeafCount++;
     }
+
     //todo: convert recursive calls to iterative
     private void AddNode(string value, NodeStack parentNodesStack, Node currentParentNode)
     {
         if (currentParentNode.HasRoom())
         {
-            currentParentNode.Accept(value);
+            var newLeaf = currentParentNode.Accept(value);
+            _leaves.Add(newLeaf);
             CurrentParentNode = currentParentNode;
             return;
         }
 
         if (currentParentNode.CanHaveSubParent())
         {
-            var newChild=Node.CreateChildNode((++NodeNumber).ToString(), currentParentNode);
+            var newChild = Node.CreateChildNode((++NodeNumber).ToString(), currentParentNode);
             currentParentNode.AddChild(newChild);
             parentNodesStack.Push(currentParentNode);
-            AddNode(value,parentNodesStack,newChild);
+            AddNode(value, parentNodesStack, newChild);
             return;
         }
 
@@ -47,7 +56,7 @@ public class Tree
             return;
         }
 
-        Node newRoot =  Node.CreateRoot((++NodeNumber).ToString(), currentParentNode);
+        Node newRoot = Node.CreateRoot((++NodeNumber).ToString(), currentParentNode);
         AddNode(value, parentNodesStack, newRoot);
         RootNode = newRoot;
     }

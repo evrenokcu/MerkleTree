@@ -1,11 +1,11 @@
-﻿namespace MerkleTree.ConsoleApp;
+﻿namespace MerkleTree.Visitors.Implementations;
 
-public class LevelOrderVisitor:ITreeVisitor
+public class LevelOrderVisitor : ITreeVisitor
 {
     private readonly Action<Node> _action;
     private readonly Node _rootNode;
 
-    public LevelOrderVisitor(Node rootNode,Action<Node> action)
+    public LevelOrderVisitor(Node rootNode, Action<Node> action)
     {
         _rootNode = rootNode;
         _action = action;
@@ -22,8 +22,8 @@ public class LevelOrderVisitor:ITreeVisitor
             if (node != Node.NullNode)
             {
                 _action(node);
-                queue.Enqueue(node.Left);
-                queue.Enqueue(node.Right);
+                queue.Enqueue(node.Left!);
+                queue.Enqueue(node.Right!);
             }
         }
     }
