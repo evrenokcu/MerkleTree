@@ -1,6 +1,4 @@
-﻿using System.Xml;
-
-namespace MerkleTree.ConsoleApp
+﻿namespace MerkleTree.ConsoleApp
 {
     internal class Program
     {
@@ -19,17 +17,17 @@ namespace MerkleTree.ConsoleApp
 
             VisitTree(rootNode);
 
-            WriteNode(rootNode, "Root");
-            WriteLevel(rootNode, 4);
-            Console.WriteLine();
-            WriteLevel(rootNode, 3);
-            Console.WriteLine();
-            WriteLevel(rootNode, 2);
-            Console.WriteLine();
-            WriteLevel(rootNode, 1);
-            Console.WriteLine();
-            WriteLevel(rootNode, 0);
-            Console.WriteLine();
+            //WriteNode(rootNode, "Root");
+            //WriteLevel(rootNode, 4);
+            //Console.WriteLine();
+            //WriteLevel(rootNode, 3);
+            //Console.WriteLine();
+            //WriteLevel(rootNode, 2);
+            //Console.WriteLine();
+            //WriteLevel(rootNode, 1);
+            //Console.WriteLine();
+            //WriteLevel(rootNode, 0);
+            //Console.WriteLine();
 
 
 
@@ -38,21 +36,24 @@ namespace MerkleTree.ConsoleApp
 
         private static void VisitTree(Node rootNode)
         {
-            Queue<Node> queue= new Queue<Node>();
-            queue.Enqueue(rootNode);
+            var visitor = new LevelOrderVisitor(rootNode, (node) => Console.Write($" {node.Value} "));
+            visitor.Visit();
 
-            var nodeCount = 1;
+            //Queue<Node> queue= new Queue<Node>();
+            //queue.Enqueue(rootNode);
 
-            while (queue.Count > 0)
-            {
-                var node = queue.Dequeue();
-                if (node != Node.NullNode)
-                {
-                    Console.Write($" {node.Value} ");
-                    queue.Enqueue(node.Left);
-                    queue.Enqueue(node.Right);
-                }
-            }
+            //var nodeCount = 1;
+
+            //while (queue.Count > 0)
+            //{
+            //    var node = queue.Dequeue();
+            //    if (node != Node.NullNode)
+            //    {
+            //        Console.Write($" {node.Value} ");
+            //        queue.Enqueue(node.Left);
+            //        queue.Enqueue(node.Right);
+            //    }
+            //}
         }
 
         public static void WriteLevel(Node node,int level)
