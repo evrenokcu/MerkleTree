@@ -29,6 +29,12 @@ public class Tree
         LeafCount++;
     }
 
+    private void AddNode2(string value, NodeStack parentNodesNodeStack, Node currentParentNode)
+    {
+        
+    }
+
+    //public static void AddNode2()
     //todo: convert recursive calls to iterative
     private void AddNode(string value, NodeStack parentNodesStack, Node currentParentNode)
     {

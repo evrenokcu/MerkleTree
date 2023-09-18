@@ -20,7 +20,7 @@ public class Node
         Left = left;
         Right = right;
         Level = level;
-        AllowedSubParents = level;
+        AllowedSubParents = level-1;
     }
 
     private static Node CreateNullNode() => new(string.Empty, null, null, null, 0);
@@ -61,7 +61,7 @@ public class Node
 
     public static Node CreateFirstRoot(string value)
     {
-        return new Node(value, NullNode, NullNode, NullNode, 0);
+        return new Node(value, NullNode, NullNode, NullNode, 1);
     }
 
     public void AddChild(Node child)

@@ -31,7 +31,7 @@ internal class Program
     }
     private static void VisitToParent(LeafNode leaf)
     {
-        var visitor = new LeafToParentVisitor(leaf, (node) => Console.Write($" {node.Value} "));
+        var visitor = new LeafToParentVisitor(leaf, (node) => Console.Write($" Level:{node.Level},Value:{node.Value} "));
         visitor.Visit();
     }
 
