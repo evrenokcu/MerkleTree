@@ -1,4 +1,4 @@
-﻿namespace MerkleTree.ConsoleApp;
+﻿namespace MerkleTree.Visitors;
 
 public interface ITreeVisitor
 {
