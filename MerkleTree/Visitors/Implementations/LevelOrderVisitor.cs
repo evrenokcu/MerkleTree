@@ -1,6 +1,6 @@
 ﻿namespace MerkleTree.Visitors.Implementations;
 
-public class LevelOrderVisitor : ITreeVisitor
+internal sealed class LevelOrderVisitor : ITreeVisitor
 {
     private readonly Action<Node> _action;
     private readonly Node _rootNode;
@@ -19,7 +19,7 @@ public class LevelOrderVisitor : ITreeVisitor
         while (queue.Count > 0)
         {
             var node = queue.Dequeue();
-            if (node != Node.NullNode)
+            if (node != Node.None)
             {
                 _action(node);
                 queue.Enqueue(node.Left!);

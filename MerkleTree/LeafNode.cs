@@ -1,8 +1,10 @@
 ﻿namespace MerkleTree;
 
-public class LeafNode : Node
+internal sealed class LeafNode : Node
 {
-    public LeafNode(string value, Node parentNode) : base(value, parentNode, NullNode, NullNode, 0)
+    private LeafNode(uint id, Node parentNode) : base(id, parentNode, None, None, 0)
     {
     }
+
+    internal static LeafNode Create(uint id, Node parentNode) => new(id, parentNode);
 }

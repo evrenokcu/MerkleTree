@@ -1,6 +1,6 @@
 ﻿namespace MerkleTree.Visitors.Implementations;
 
-public class LeafToParentVisitor : ITreeVisitor
+internal sealed class LeafToParentVisitor : ITreeVisitor
 {
     private readonly Action<Node> _action;
     private readonly LeafNode _leafNode;
@@ -12,7 +12,7 @@ public class LeafToParentVisitor : ITreeVisitor
         {
             _action.Invoke(node);
             node = node.Parent!;
-        } while (node != Node.NullNode);
+        } while (node != Node.None);
     }
 
     public LeafToParentVisitor(LeafNode leafNode, Action<Node> action)

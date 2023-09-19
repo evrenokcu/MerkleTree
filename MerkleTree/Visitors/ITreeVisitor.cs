@@ -1,6 +1,6 @@
 ﻿namespace MerkleTree.Visitors;
 
-public interface ITreeVisitor
+internal interface ITreeVisitor
 {
     void Visit();
 }

@@ -7,14 +7,14 @@ internal class Program
     static void Main(string[] args)
     {
         var tree = new Tree();
-        for (int i = 1; i < 33; i++)
+        for (uint i = 1; i <=32 ; i++)
         {
-            tree.AddNode(i.ToString());
+            tree.AddNode(i);
 
         }
         var leafCount = tree.LeafCount;
         var rootNode = tree.RootNode;
-        var currentParentNode = tree.CurrentParentNode;
+       
 
         Console.WriteLine($"Leaf count:{leafCount}");
 
@@ -26,20 +26,30 @@ internal class Program
 
     private static void VisitTree(Node rootNode)
     {
-        var visitor = new LevelOrderVisitor(rootNode, (node) => Console.Write($" {node.Value} "));
+        var level = rootNode.Level;
+        Console.WriteLine();
+        var visitor = new LevelOrderVisitor(rootNode, (node) =>
+        {
+            if (node.Level != level)
+            {
+                level=node.Level;
+                Console.WriteLine();
+            }
+            Console.Write($" {node.Id} ");
+        });
         visitor.Visit();
     }
     private static void VisitToParent(LeafNode leaf)
     {
-        var visitor = new LeafToParentVisitor(leaf, (node) => Console.Write($" Level:{node.Level},Value:{node.Value} "));
+        var visitor = new LeafToParentVisitor(leaf, (node) => Console.Write($" Level:{node.Level},Id:{node.Id} "));
         visitor.Visit();
     }
 
     public static void WriteLevel(Node node,int level)
     {
-        if (node == Node.NullNode) return;
+        if (node == Node.None) return;
         if(node.Level==level)
-            Console.Write($" {node.Value} ");
+            Console.Write($" {node.Id} ");
         WriteLevel(node.Left,level);
         WriteLevel(node.Right,level);
 
@@ -53,13 +63,13 @@ internal class Program
         while (stack.Count > 0)
         {
             var n = stack.Pop();
-            if (node != Node.NullNode)
+            if (node != Node.None)
             {
-                Console.WriteLine($"{prefix} Level:{node.Level}, Value:{node.Value}");
+                Console.WriteLine($"{prefix} Level:{node.Level}, Id:{node.Id}");
             }
         }
-        if (node == Node.NullNode) return;
-        Console.WriteLine($"{prefix} Level:{node.Level}, Value:{node.Value}");
+        if (node == Node.None) return;
+        Console.WriteLine($"{prefix} Level:{node.Level}, Id:{node.Id}");
         WriteNode(node.Left,"left:");
         WriteNode(node.Right,"right:");
     }

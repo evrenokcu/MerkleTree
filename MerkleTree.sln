@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MerkleTree", "MerkleTree\Me
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MerkleTree.UnitTests", "MerkleTree.UnitTests\MerkleTree.UnitTests.csproj", "{4D41BFFC-1173-4BFD-B1C1-F4324B3A1573}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MerkleTree.ConsoleApp", "MerkleTree.ConsoleApp\MerkleTree.ConsoleApp.csproj", "{AB6D67D0-E9CF-464F-AA30-C8320260D298}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MerkleTree.ConsoleApp", "MerkleTree.ConsoleApp\MerkleTree.ConsoleApp.csproj", "{AB6D67D0-E9CF-464F-AA30-C8320260D298}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MerkleTree.ClientConsoleApp", "MerkleTree.ClientConsoleApp\MerkleTree.ClientConsoleApp.csproj", "{B67DBC00-B4D5-417D-A50B-58E0F3F0E980}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{AB6D67D0-E9CF-464F-AA30-C8320260D298}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB6D67D0-E9CF-464F-AA30-C8320260D298}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AB6D67D0-E9CF-464F-AA30-C8320260D298}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B67DBC00-B4D5-417D-A50B-58E0F3F0E980}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B67DBC00-B4D5-417D-A50B-58E0F3F0E980}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B67DBC00-B4D5-417D-A50B-58E0F3F0E980}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B67DBC00-B4D5-417D-A50B-58E0F3F0E980}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

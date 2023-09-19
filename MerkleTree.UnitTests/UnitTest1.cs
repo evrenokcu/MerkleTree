@@ -7,8 +7,8 @@ namespace MerkleTree.UnitTests
         [Fact]
         public void CanCreateNullNode()
         {
-            var node = Node.NullNode;
-            node.Value.Should().Be(string.Empty);
+            var node = Node.None;
+            node.Id.Should().Be(0);
             node.Left.Should().Be(null);
             node.Right.Should().Be(null);
             node.Parent.Should().Be(null);
@@ -19,23 +19,23 @@ namespace MerkleTree.UnitTests
         {
             var tree = new Tree();
             tree.LeafCount.Should().Be(0);
-            tree.RootNode.Should().Be(Node.NullNode);
+            tree.RootNode.Should().Be(Node.None);
         }
 
         [Fact]
         public void Fill()
         {
             var tree = new Tree();
-            for (int i = 1; i < 33; i++)
+            for (uint i = 1; i <= 32; i++)
             {
-                tree.AddNode(i.ToString());
+                tree.AddNode(i);
                 
             }
             var leafCount=tree.LeafCount;
             var rootNode=tree.RootNode;
             var currentParentNode = tree.CurrentParentNode;
 
-            Console.WriteLine(tree.RootNode.Value);
+            Console.WriteLine(tree.RootNode.Id);
         }
     }
 }
