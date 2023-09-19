@@ -17,7 +17,7 @@ namespace MerkleTree.UnitTests
         [Fact]
         public void EmptyTreeShouldHaveNoNodes()
         {
-            var tree = new Tree();
+            var tree = new Tree(it=>it);
             tree.LeafCount.Should().Be(0);
             tree.RootNode.Should().Be(Node.None);
         }
@@ -25,10 +25,10 @@ namespace MerkleTree.UnitTests
         [Fact]
         public void Fill()
         {
-            var tree = new Tree();
+            var tree = new Tree(it=>it);
             for (uint i = 1; i <= 32; i++)
             {
-                tree.AddNode(i);
+                tree.AddNode(i.ToString());
                 
             }
             var leafCount=tree.LeafCount;

@@ -6,10 +6,10 @@ internal class Program
 {
     static void Main(string[] args)
     {
-        var tree = new Tree();
+        var tree = new Tree(it => it);
         for (uint i = 1; i <=32 ; i++)
         {
-            tree.AddNode(i);
+            tree.AddNode(i.ToString());
 
         }
         var leafCount = tree.LeafCount;
@@ -35,7 +35,7 @@ internal class Program
                 level=node.Level;
                 Console.WriteLine();
             }
-            Console.Write($" {node.Id} ");
+            Console.Write($" {node.Id} Value:{node.Value} ");
         });
         visitor.Visit();
     }
@@ -45,7 +45,7 @@ internal class Program
         visitor.Visit();
     }
 
-    public static void WriteLevel(Node node,int level)
+    public static void WriteLevel(Node node, uint level)
     {
         if (node == Node.None) return;
         if(node.Level==level)

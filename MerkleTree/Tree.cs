@@ -2,44 +2,70 @@
 
 public sealed class Tree
 {
+    private readonly Func<string, string> _hashFunction;
     private readonly NodeStack _parentNodesNodeStack = new();
     private uint _nodeNumber = 1;
+    private uint _leafNodeNumber = 0;
     private readonly IList<LeafNode> _leaves = new List<LeafNode>();
 
     internal Node RootNode { get; private set; }
     internal Node CurrentParentNode { get; private set; }
     internal int LeafCount { get; private set; }
 
-    public Tree()
+    public Tree(Func<string, string> hashFunction)
     {
-        RootNode = Node.CreateFirstRoot(1);
+        _hashFunction = hashFunction;
+        RootNode = Node.CreateFirstRoot(1, string.Empty);
         CurrentParentNode = RootNode;
         _parentNodesNodeStack.Push(RootNode);
     }
-    public void AddNode(uint id)
+
+    public (NodeInformation rootNode,NodeInformation leafNode) AddNode(string value)
     {
-        CurrentParentNode = AddNode(
-            id,
+        if (string.IsNullOrWhiteSpace(value)) throw new ArgumentNullException(nameof(value));
+        DoAddNode(
+            value,
             _parentNodesNodeStack,
             CurrentParentNode,
             () => ++_nodeNumber,
-            _leaves.Add,
+            ++_leafNodeNumber,
+            _hashFunction,
+            AddLeaf,
             root => RootNode = root,
-            parentNode => CurrentParentNode = parentNode);
-        LeafCount++;
+            parentNode => CurrentParentNode = parentNode
+        );
+        
+
+        return (RootNode.Convert(), GetLeaf((int)_leafNodeNumber).Convert());
     }
 
+    public NodeInformation GetLeafInformation(int leafNumber) => GetLeaf(leafNumber).Convert();
+    public NodeInformation ChangeLeafHash(int leafNumber)
+    {
+        var leaf = GetLeaf(leafNumber);
+        leaf.RecalculateHash(_hashFunction);
+        return leaf.Convert();
+    }
+
+    public NodeInformation GetRootInformation() => RootNode.Convert();
+
+    private void AddLeaf(LeafNode node)
+    {
+        _leaves.Add(node);
+        LeafCount++;
+    }
     internal LeafNode GetLeaf(int leafNumber)
     {
         if (leafNumber == 0 || leafNumber > LeafCount) throw new ArgumentOutOfRangeException(nameof(leafNumber));
         return _leaves[leafNumber - 1];
     }
 
-    private static Node AddNode(
-        uint id,
+    private static void DoAddNode(string value,
         NodeStack parentNodesStack,
         Node currentParentNode,
         Func<uint> nodeNumberProvider,
+        uint leafNumber,
+        Func<string, string> hashFunction,
         Action<LeafNode>? onNewLeaf = null,
         Action<Node>? onNewRoot = null,
         Action<Node>? onChangeCurrentNode = null)
@@ -60,7 +86,7 @@ public sealed class Tree
 #endif
             if (currentNode.HasRoomForNonLeaf())
             {
-                var newChild = Node.CreateChildNode(nodeNumberProvider.Invoke(), currentNode);
+                var newChild = Node.CreateChildNode(nodeNumberProvider.Invoke(), value, currentNode);
                 currentNode.AddChildNode(newChild);
                 //if current node can have additional sub parents, push it to stack to return back
                 if (currentNode.HasRoomForNonLeaf() || currentNode.IsRoot())
@@ -73,7 +99,7 @@ public sealed class Tree
             else if (currentNode.IsRoot() && !currentNode.HasRoom())
             {
                 //no room, create another root
-                Node newRoot = Node.CreateRootNode(nodeNumberProvider.Invoke(), currentNode);
+                Node newRoot = Node.CreateRootNode(nodeNumberProvider.Invoke(), value, currentNode);
                 onNewRoot?.Invoke(newRoot);
                 currentNode = newRoot;
             }
@@ -87,7 +113,8 @@ public sealed class Tree
             throw new Exception();
 
 
-        var newLeaf = currentNode.AssignLeafNode(id);
+        var newLeaf = currentNode.AssignLeafNode(leafNumber, hashFunction.Invoke(value));
+        newLeaf.RecalculateHash(hashFunction);
         onNewLeaf?.Invoke(newLeaf);
 
         if (!currentNode.HasRoom())
@@ -99,7 +126,7 @@ public sealed class Tree
         }
 
         onChangeCurrentNode?.Invoke(currentNode);
-        return currentNode;
+        //return currentNode;
     }
 
 

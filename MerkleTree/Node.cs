@@ -4,50 +4,52 @@ namespace MerkleTree;
 
 internal class Node
 {
+    
     internal static readonly Node None = CreateNullNode();
+    internal string Value { get; private set; }
     internal uint Id { get; private set; }
     internal Node? Left { get; private set; }
     internal Node? Right { get; private set; }
     internal Node? Parent { get; private set; }
-    internal int Level { get; }
-    internal int AllowedSubNodeCount { get; private set; }
+    internal uint Level { get; }
+    internal uint AllowedSubNodeCount { get; private set; }
     internal bool HasRoomForNonLeaf() => AllowedSubNodeCount > 0;
     internal bool IsRoot() => Parent == None;
     internal bool HasRoom() => HasRoomForNonLeaf() || HasRoomForLeaf();
     internal bool HasRoomForLeaf() => Left == None || Right == None;
-    private int GetSubNodeCount() => Level - AllowedSubNodeCount;
+    private uint GetSubNodeCount() => (Level - AllowedSubNodeCount);
 
-    protected Node(uint id, Node? parent, Node? left, Node? right, int level)
+    protected Node(uint id,string value, Node? parent, Node? left, Node? right, uint level)
     {
-        if (level < 0) throw new InvalidEnumArgumentException(nameof(level));
         Parent = parent;
         Id = id;
         Left = left;
         Right = right;
         Level = level;
         AllowedSubNodeCount = level - 1;
+        Value = value;
     }
 
 
-    private static Node CreateNullNode() => new(0, null, null, null, 0);
+    private static NullNode CreateNullNode() => new();
 
-    internal static Node CreateChildNode(uint id, Node parentNode) =>
-        new(id, parentNode, parentNode.Right, Node.None, parentNode.GetSubNodeCount());
+    internal static Node CreateChildNode(uint id,string value, Node parentNode) =>
+        new(id,value, parentNode, parentNode.Right, Node.None, parentNode.GetSubNodeCount());
 
 
-    internal static Node CreateRootNode(uint id, Node parentOf)
+    internal static Node CreateRootNode(uint id, string value, Node parentOf)
     {
-        var node = new Node(id, Node.None, parentOf, None, parentOf.Level + 1);
+        var node = new Node(id, value,Node.None, parentOf, None, parentOf.Level + 1);
         parentOf.Parent = node;
         return node;
     }
 
 
-    internal LeafNode AssignLeafNode(uint id)
+    internal LeafNode AssignLeafNode(uint id,string value)
     {
         if (!HasRoomForLeaf()) throw new InvalidOperationException($"Node is already full, can not accept a leaf.");
 
-        LeafNode newNode = LeafNode.Create(id, this);
+        LeafNode newNode = LeafNode.Create(id,value, this);
 
         if (Left == None)
         {
@@ -62,14 +64,31 @@ internal class Node
         return newNode;
     }
 
-    internal static Node CreateFirstRoot(uint id)
+    internal static Node CreateFirstRoot(uint id, string value)
     {
-        return new Node(id, None, None, None, 1);
+        return new Node(id, value,None, None, None, 1);
     }
 
     internal void AddChildNode(Node child)
     {
-        AllowedSubNodeCount += -1;
+        AllowedSubNodeCount -= 1;
         Right = child;
+    }
+    internal virtual void RecalculateHash(Func<string, string> hashFunction)
+    {
+        this.Value = hashFunction.Invoke(string.Concat(Left!.Value, Right!.Value));
+        Parent!.RecalculateHash(hashFunction);
+    }
+}
+
+internal class NullNode:Node
+{
+    internal NullNode() : base(0, string.Empty, null, null, null, 0)
+    {
+    }
+
+    internal override void RecalculateHash(Func<string, string> hashFunction)
+    {
+        //do nothing
     }
 }
