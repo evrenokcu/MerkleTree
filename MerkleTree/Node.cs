@@ -16,7 +16,7 @@ internal class Node
     internal bool HasRoomForLeaf() => Left == None || Right == None;
     private uint GetSubNodeCount() => (Level - AllowedSubNodeCount);
 
-    protected Node(uint id, string value, Node? parent, Node? left, Node? right, uint level)
+    internal Node(uint id, string value, Node? parent, Node? left, Node? right, uint level)
     {
         Parent = parent;
         Id = id;
@@ -61,10 +61,7 @@ internal class Node
         return newNode;
     }
 
-    internal static Node CreateFirstRoot(uint id, string value)
-    {
-        return new Node(id, value, None, None, None, 1);
-    }
+    
 
     internal void AddChildNode(Node child)
     {

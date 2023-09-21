@@ -33,7 +33,7 @@ namespace MerkleTree.UnitTests
             }
             var leafCount=tree.LeafCount;
             var rootNode=tree.RootNode;
-            var currentParentNode = tree.CurrentParentNode;
+            var currentParentNode = tree.CurrentNode;
 
             Console.WriteLine(tree.RootNode.Id);
         }
