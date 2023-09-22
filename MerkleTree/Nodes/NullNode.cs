@@ -2,7 +2,7 @@
 
 internal class NullNode : Node
 {
-    private NullNode() : base(0, string.Empty, null, null, null, 0)
+    private NullNode() : base( string.Empty, null, null, null, 0)
     {
     }
 

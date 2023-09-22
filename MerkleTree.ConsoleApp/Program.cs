@@ -36,13 +36,13 @@ internal class Program
                 level=node.Level;
                 Console.WriteLine();
             }
-            Console.Write($" {node.Id} Value:{node.Value} ");
+            Console.Write($" Value:{node.Value} ");
         });
         visitor.Visit();
     }
     private static void VisitToParent(LeafNode leaf)
     {
-        var visitor = new LeafToParentVisitor(leaf, (node) => Console.Write($" Level:{node.Level},Id:{node.Id} "));
+        var visitor = new LeafToParentVisitor(leaf, (node) => Console.Write($" Level:{node.Level}"));
         visitor.Visit();
     }
 
@@ -50,7 +50,7 @@ internal class Program
     {
         if (node == Node.None) return;
         if(node.Level==level)
-            Console.Write($" {node.Id} ");
+            Console.Write($"  ");
         WriteLevel(node.Left,level);
         WriteLevel(node.Right,level);
 
@@ -66,11 +66,11 @@ internal class Program
             var n = stack.Pop();
             if (node != Node.None)
             {
-                Console.WriteLine($"{prefix} Level:{node.Level}, Id:{node.Id}");
+                Console.WriteLine($"{prefix} Level:{node.Level} ");
             }
         }
         if (node == Node.None) return;
-        Console.WriteLine($"{prefix} Level:{node.Level}, Id:{node.Id}");
+        Console.WriteLine($"{prefix} Level:{node.Level} ");
         WriteNode(node.Left,"left:");
         WriteNode(node.Right,"right:");
     }

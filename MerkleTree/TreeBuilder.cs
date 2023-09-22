@@ -22,7 +22,7 @@ internal class TreeBuilder
 
         if (!currentNode.HasRoomForLeaf())
         {
-            var newNode = CreateParentNode(value, currentNode, ++_nodeNumber);
+            var newNode = CreateParentNode(value, currentNode);
             if (newNode.IsRoot()) Root=(newNode as RootNode)!;
 
             if (currentNode.HasRoomForNonLeaf() || currentNode.IsRoot())
@@ -30,7 +30,7 @@ internal class TreeBuilder
             currentNode = newNode;
         }
 
-        var newLeaf = currentNode.AssignLeafNode(++_leafNodeNumber, value);
+        var newLeaf = currentNode.AssignLeafNode( value);
 
         
 
@@ -45,26 +45,26 @@ internal class TreeBuilder
         return (newLeaf,Root);
     }
 
-    private static Node CreateParentNode(string value, Node node, uint nodeNumber)
+    private static Node CreateParentNode(string value, Node node)
     {
         if (node.HasRoomForNonLeaf())
         {
-            return AddParentNode(value, node, nodeNumber);
+            return AddParentNode(value, node);
         }
 
         //no room, create another root
-        return CreateNewRootNode(value, node, nodeNumber);
+        return CreateNewRootNode(value, node );
 
     }
 
-    private static RootNode CreateNewRootNode(string value, Node currentNode, uint nodeNumber)
+    private static RootNode CreateNewRootNode(string value, Node currentNode)
     {
-        return Node.CreateRootNode(nodeNumber, value, currentNode);
+        return Node.CreateRootNode( value, currentNode);
     }
 
-    private static Node AddParentNode(string value, Node currentNode, uint nodeNumber)
+    private static Node AddParentNode(string value, Node currentNode)
     {
-        var newChild = BranchNode.Create(nodeNumber, value, currentNode);
+        var newChild = BranchNode.Create( value, currentNode);
         currentNode.AddBranchNode(newChild);
 
         return newChild;

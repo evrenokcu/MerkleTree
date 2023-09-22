@@ -9,7 +9,7 @@ namespace MerkleTree.UnitTests
         public void CanCreateNullNode()
         {
             var node = Node.None;
-            node.Id.Should().Be(0);
+            
             node.Left.Should().Be(null);
             node.Right.Should().Be(null);
             node.Parent.Should().Be(null);
@@ -36,7 +36,7 @@ namespace MerkleTree.UnitTests
             var rootNode=tree.RootNode;
             //var currentParentNode = tree.CurrentNode;
 
-            Console.WriteLine(tree.RootNode.Id);
+            
         }
     }
 }

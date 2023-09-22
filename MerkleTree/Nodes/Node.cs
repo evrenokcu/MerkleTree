@@ -4,7 +4,6 @@ internal abstract class Node
 {
     internal static readonly Node None = NullNode.Create();
     internal string Value { get; private set; }
-    internal uint Id { get; private set; }
     internal Node? Left { get; private set; }
     internal Node? Right { get; private set; }
      internal Node? Parent { get; private set; }
@@ -20,10 +19,9 @@ internal abstract class Node
     {
         Parent = node;
     }
-    internal Node(uint id, string value, Node? parent, Node? left, Node? right, uint level)
+    internal Node(string value, Node? parent, Node? left, Node? right, uint level)
     {
         Parent = parent;
-        Id = id;
         Left = left;
         Right = right;
         Level = level;
@@ -31,19 +29,19 @@ internal abstract class Node
         Value = value;
     }
     
-    internal static RootNode CreateRootNode(uint id, string value, Node parentOf)
+    internal static RootNode CreateRootNode( string value, Node parentOf)
     {
-        var node = RootNode.Create(id, value, parentOf);
+        var node = RootNode.Create(value, parentOf);
         parentOf.Parent = node;
         return node;
     }
 
 
-    internal LeafNode AssignLeafNode(uint id, string value)
+    internal LeafNode AssignLeafNode(string value)
     {
         if (!HasRoomForLeaf()) throw new InvalidOperationException("Node is already full, can not accept a leaf.");
 
-        LeafNode newNode = LeafNode.Create(id, value, this);
+        LeafNode newNode = LeafNode.Create( value, this);
 
         if (Left == None)
         {
