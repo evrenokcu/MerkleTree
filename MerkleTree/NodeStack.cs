@@ -1,4 +1,6 @@
-﻿namespace MerkleTree;
+﻿using MerkleTree.Nodes;
+
+namespace MerkleTree;
 
 internal sealed class NodeStack
 {
@@ -6,9 +8,6 @@ internal sealed class NodeStack
 
     public void Push(Node node) => _parentNodeQueue.Push(node);
 
-    public Node Pop()
-    {
-        if(_parentNodeQueue.Count==0) return Node.None;
-        return _parentNodeQueue.Pop();
-    }
+    public Node Pop()=>
+         _parentNodeQueue.TryPop(out var node)?node:Node.None;
 }

@@ -1,4 +1,5 @@
 using FluentAssertions;
+using MerkleTree.Nodes;
 
 namespace MerkleTree.UnitTests
 {

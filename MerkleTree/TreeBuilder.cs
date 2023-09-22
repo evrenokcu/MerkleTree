@@ -1,27 +1,20 @@
-﻿namespace MerkleTree;
+﻿using MerkleTree.Nodes;
+
+namespace MerkleTree;
 
 internal class TreeBuilder
 {
     private uint _nodeNumber = 1;
     private uint _leafNodeNumber;
-    private Node _root;
-
+    internal RootNode Root { get; private set; } = RootNode.CreateFirstRoot;
     private readonly NodeStack _parentNodesStack = new();
 
     public TreeBuilder()
     {
-        var node = CreateFirstRoot(1, string.Empty);
-        _root = node;
-        _parentNodesStack.Push(node);
+        _parentNodesStack.Push(Root);
     }
 
-    internal static Node CreateFirstRoot(uint id, string value)
-    {
-        var node = new Node(id, value, Node.None, Node.None, Node.None, 1);
-        return node;
-    }
-
-    internal (LeafNode leaf,Node root) AddNode(string value)
+    internal (LeafNode leaf,RootNode root) AddNode(string value)
     {
         var currentNode = _parentNodesStack.Pop();
 
@@ -30,7 +23,7 @@ internal class TreeBuilder
         if (!currentNode.HasRoomForLeaf())
         {
             var newNode = CreateParentNode(value, currentNode, ++_nodeNumber);
-            if (newNode.IsRoot()) _root=newNode;
+            if (newNode.IsRoot()) Root=(newNode as RootNode)!;
 
             if (currentNode.HasRoomForNonLeaf() || currentNode.IsRoot())
                 _parentNodesStack.Push(currentNode);
@@ -49,7 +42,7 @@ internal class TreeBuilder
             _parentNodesStack.Push(currentNode);
         }
 
-        return (newLeaf,_root);
+        return (newLeaf,Root);
     }
 
     private static Node CreateParentNode(string value, Node node, uint nodeNumber)
@@ -64,15 +57,15 @@ internal class TreeBuilder
 
     }
 
-    private static Node CreateNewRootNode(string value, Node currentNode, uint nodeNumber)
+    private static RootNode CreateNewRootNode(string value, Node currentNode, uint nodeNumber)
     {
         return Node.CreateRootNode(nodeNumber, value, currentNode);
     }
 
     private static Node AddParentNode(string value, Node currentNode, uint nodeNumber)
     {
-        var newChild = Node.CreateChildNode(nodeNumber, value, currentNode);
-        currentNode.AddChildNode(newChild);
+        var newChild = BranchNode.Create(nodeNumber, value, currentNode);
+        currentNode.AddBranchNode(newChild);
 
         return newChild;
     }

@@ -1,4 +1,6 @@
-﻿namespace MerkleTree.Visitors.Implementations;
+﻿using MerkleTree.Nodes;
+
+namespace MerkleTree.Visitors.Implementations;
 
 internal sealed class LeafToParentVisitor : ITreeVisitor
 {

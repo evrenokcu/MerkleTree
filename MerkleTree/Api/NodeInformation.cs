@@ -1,4 +1,4 @@
-﻿namespace MerkleTree;
+﻿namespace MerkleTree.Api;
 
 public sealed class NodeInformation
 {
@@ -9,7 +9,6 @@ public sealed class NodeInformation
     private NodeInformation(uint nodeId, string hashValue, uint treeLevel)
     {
         ArgumentException.ThrowIfNullOrEmpty(nameof(hashValue));
-
 
         NodeId = nodeId;
         HashValue = hashValue;

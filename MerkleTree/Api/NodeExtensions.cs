@@ -1,4 +1,6 @@
-﻿namespace MerkleTree;
+﻿using MerkleTree.Nodes;
+
+namespace MerkleTree.Api;
 
 internal static class NodeExtensions
 {

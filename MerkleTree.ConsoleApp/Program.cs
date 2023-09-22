@@ -1,4 +1,5 @@
-﻿using MerkleTree.Visitors.Implementations;
+﻿using MerkleTree.Nodes;
+using MerkleTree.Visitors.Implementations;
 
 namespace MerkleTree.ConsoleApp;
 
