@@ -10,7 +10,6 @@ public sealed class Tree:ITree
 
     internal RootNode RootNode { get; private set; }
 
-    internal int LeafCount { get; private set; }
     private readonly Func<string, string> _hashFunction;
 
     public Tree(Func<string, string> hashFunction)
@@ -27,7 +26,7 @@ public sealed class Tree:ITree
        var (leaf, root) = _builder.AddNode(_hashFunction.Invoke(value));
        
        _leaves.Add(leaf);
-       LeafCount++;
+       
        leaf.RecalculateHash(_hashFunction);
        RootNode = root;
     }
@@ -38,7 +37,7 @@ public sealed class Tree:ITree
 
     internal LeafNode GetLeaf(int leafNumber)
     {
-        if (leafNumber == 0 || leafNumber > LeafCount) throw new ArgumentOutOfRangeException(nameof(leafNumber));
+        if (leafNumber == 0 || leafNumber > _leaves.Count) throw new ArgumentOutOfRangeException(nameof(leafNumber));
         return _leaves[leafNumber - 1];
     }
     
