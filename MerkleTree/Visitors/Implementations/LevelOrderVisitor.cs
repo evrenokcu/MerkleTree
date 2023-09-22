@@ -13,18 +13,17 @@ internal sealed class LevelOrderVisitor : ITreeVisitor
 
     public void Visit()
     {
-        Queue<Node> queue = new Queue<Node>();
+        var queue = new Queue<Node>();
         queue.Enqueue(_rootNode);
 
         while (queue.Count > 0)
         {
             var node = queue.Dequeue();
-            if (node != Node.None)
-            {
-                _action(node);
-                queue.Enqueue(node.Left!);
-                queue.Enqueue(node.Right!);
-            }
+            if (node == Node.None) continue;
+
+            _action(node);
+            queue.Enqueue(node.Left!);
+            queue.Enqueue(node.Right!);
         }
     }
 }

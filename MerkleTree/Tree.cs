@@ -12,7 +12,7 @@ public sealed class Tree
 
     public Tree(Func<string, string> hashFunction)
     {
-        _builder = new TreeBuilder(this);
+        _builder = new TreeBuilder();
         _hashFunction = hashFunction;
     }
 
@@ -20,7 +20,12 @@ public sealed class Tree
     {
         if (string.IsNullOrWhiteSpace(value)) throw new ArgumentNullException(nameof(value));
 
-        _builder.DoAddNode(_hashFunction.Invoke(value));
+       var result= _builder.AddNode(_hashFunction.Invoke(value));
+       
+       _leaves.Add(result.leaf);
+       LeafCount++;
+       result.leaf.RecalculateHash(_hashFunction);
+       RootNode = result.root;
     }
 
     public NodeInformation GetLeafInformation(int leafNumber) => GetLeaf(leafNumber).Convert();
@@ -33,13 +38,6 @@ public sealed class Tree
     }
 
     public NodeInformation GetRootInformation() => RootNode.Convert();
-
-    internal void AddLeaf(LeafNode node)
-    {
-        _leaves.Add(node);
-        LeafCount++;
-        node.RecalculateHash(_hashFunction);
-    }
 
     internal LeafNode GetLeaf(int leafNumber)
     {

@@ -2,87 +2,77 @@
 
 internal class TreeBuilder
 {
-    private readonly Tree _tree;
-    
     private uint _nodeNumber = 1;
     private uint _leafNodeNumber;
-
-    internal Node CurrentNode { get; private set; }
+    private Node _root;
 
     private readonly NodeStack _parentNodesStack = new();
 
-    public TreeBuilder(Tree tree)
+    public TreeBuilder()
     {
-        _tree = tree;
         var node = CreateFirstRoot(1, string.Empty);
-        CurrentNode= node;
-        tree.SetRootNode(node);
+        _root = node;
+        _parentNodesStack.Push(node);
     }
 
-    internal Node CreateFirstRoot(uint id, string value)
+    internal static Node CreateFirstRoot(uint id, string value)
     {
         var node = new Node(id, value, Node.None, Node.None, Node.None, 1);
-        _parentNodesStack.Push(node);
         return node;
     }
 
-    internal void DoAddNode(string value)
+    internal (LeafNode leaf,Node root) AddNode(string value)
     {
-        if (!CurrentNode.HasRoomForLeaf())
+        var currentNode = _parentNodesStack.Pop();
+
+        if (currentNode == Node.None) throw new Exception();
+
+        if (!currentNode.HasRoomForLeaf())
         {
-            CurrentNode = FindOrCreateParentNode(value);
+            var newNode = CreateParentNode(value, currentNode, ++_nodeNumber);
+            if (newNode.IsRoot()) _root=newNode;
+
+            if (currentNode.HasRoomForNonLeaf() || currentNode.IsRoot())
+                _parentNodesStack.Push(currentNode);
+            currentNode = newNode;
         }
 
+        var newLeaf = currentNode.AssignLeafNode(++_leafNodeNumber, value);
 
-        var newLeaf = CurrentNode.AssignLeafNode(++_leafNodeNumber, value);
         
-        _tree.AddLeaf(newLeaf);
 
-        if (!CurrentNode.HasRoom())
+        if (currentNode.HasRoom() || currentNode.IsRoot())
         {
             //Can not accept either leaf or non-leaf
             //we are done with this node. 
             //get next node from queue
-            CurrentNode = _parentNodesStack.Pop();
+            _parentNodesStack.Push(currentNode);
         }
+
+        return (newLeaf,_root);
     }
 
-    private Node FindOrCreateParentNode(string value)
+    private static Node CreateParentNode(string value, Node node, uint nodeNumber)
     {
-        Node newNode;
-        if (CurrentNode.HasRoomForNonLeaf())
+        if (node.HasRoomForNonLeaf())
         {
-            newNode = AddParentNode(value, CurrentNode, _parentNodesStack, ++_nodeNumber);
+            return AddParentNode(value, node, nodeNumber);
         }
 
-        else if (CurrentNode.IsRoot() && !CurrentNode.HasRoom())
-        {
-            //no room, create another root
-            newNode = CreateNewRootNode(value, CurrentNode, ++_nodeNumber);
-            _tree.SetRootNode(newNode);
-        }
-        else newNode = _parentNodesStack.Pop();
+        //no room, create another root
+        return CreateNewRootNode(value, node, nodeNumber);
 
-        if (!newNode.HasRoomForLeaf())
-            throw new Exception();
-        return newNode;
     }
 
     private static Node CreateNewRootNode(string value, Node currentNode, uint nodeNumber)
     {
-        Node newRoot = Node.CreateRootNode(nodeNumber, value, currentNode);
-        return newRoot;
+        return Node.CreateRootNode(nodeNumber, value, currentNode);
     }
 
-    private static Node AddParentNode(string value, Node currentNode, NodeStack stack, uint nodeNumber)
+    private static Node AddParentNode(string value, Node currentNode, uint nodeNumber)
     {
         var newChild = Node.CreateChildNode(nodeNumber, value, currentNode);
         currentNode.AddChildNode(newChild);
-        //if current node can have additional sub parents, push it to stack to return back
-        if (currentNode.HasRoomForNonLeaf() || currentNode.IsRoot())
-        {
-            stack.Push(currentNode);
-        }
 
         return newChild;
     }

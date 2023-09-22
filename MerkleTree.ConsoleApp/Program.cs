@@ -13,7 +13,7 @@ internal class Program
 
         }
         var leafCount = tree.LeafCount;
-        var rootNode = tree.RootNode;
+        var rootNode = tree.RootNode; 
        
 
         Console.WriteLine($"Leaf count:{leafCount}");
